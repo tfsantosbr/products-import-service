@@ -11,7 +11,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using ProductsImport.Api.Domain.Core.Services.Files;
 using ProductsImport.Api.Domain.Imports.Handlers;
+using ProductsImport.Api.Infrastructure.Services;
 
 namespace ProductsImport.Api
 {
@@ -32,6 +34,7 @@ namespace ProductsImport.Api
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "ProductsImport.Api", Version = "v1" });
             });
 
+            services.AddScoped<IFileService, FileService>();
             services.AddScoped<ICreateProductImportHandler, CreateProductImportHandler>();
         }
 

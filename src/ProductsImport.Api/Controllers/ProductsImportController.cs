@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -22,18 +23,17 @@ namespace ProductsImport.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateImport(IFormFile spreadsheet)
+        public async Task<IActionResult> CreateImport(IFormFile spreadsheetFile)
         {
-            if (spreadsheet is null)
+            if (spreadsheetFile is null)
                 return BadRequest("Spreadsheet file is required");
 
-            var spreadsheetStream = spreadsheet.OpenReadStream();
+            using var memoryStream = new MemoryStream();
+            await spreadsheetFile.CopyToAsync(memoryStream);
 
-            var request = new CreateProductsImport(spreadsheetStream);
+            var request = new CreateProductsImport(spreadsheetFile.FileName, memoryStream.ToArray());
 
             var result = await productImportHandler.Handle(request);
-
-            spreadsheetStream.Close();
 
             return Ok(result);
         }

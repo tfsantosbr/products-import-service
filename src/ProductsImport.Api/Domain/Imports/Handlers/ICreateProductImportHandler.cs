@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using ProductsImport.Api.Domain.Core.Services.Files;
 using ProductsImport.Api.Domain.Imports.Commands;
 using ProductsImport.Api.Domain.Imports.Models;
 

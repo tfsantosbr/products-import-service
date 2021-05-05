@@ -4,11 +4,13 @@ namespace ProductsImport.Api.Domain.Imports.Commands
 {
     public class CreateProductsImport
     {
-        public CreateProductsImport(Stream data)
+        public CreateProductsImport(string fileName, byte[] data)
         {
             Data = data;
+            FileName = fileName;
         }
 
-        public Stream Data { get; }
+        public string FileName { get; set; }
+        public byte[] Data { get; }
     }
 }
