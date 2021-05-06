@@ -4,9 +4,21 @@ namespace ProductsImport.Api.Domain.Imports
 {
     public class Import
     {
-        public Guid Id { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public DateTime? CompletedAt { get; set; }
-        public string SpreadsheetFileUrl { get; set; }
+        public Import(string spreadsheetFileUrl)
+        {
+            Id = Guid.NewGuid();
+            SpreadsheetFileUrl = spreadsheetFileUrl;
+            CreatedAt = DateTime.UtcNow;
+        }
+
+        public Guid Id { get; private set; }
+        public DateTime CreatedAt { get; private set; }
+        public DateTime? CompletedAt { get; private set; }
+        public string SpreadsheetFileUrl { get; private set; }
+
+        public void Complete()
+        {
+            CompletedAt = DateTime.UtcNow;
+        }
     }
 }

@@ -13,6 +13,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using ProductsImport.Api.Domain.Core.Services.Files;
 using ProductsImport.Api.Domain.Imports.Handlers;
+using ProductsImport.Api.Domain.Imports.Repository;
+using ProductsImport.Api.Infrastructure.Repositories;
 using ProductsImport.Api.Infrastructure.Services;
 
 namespace ProductsImport.Api
@@ -36,6 +38,7 @@ namespace ProductsImport.Api
 
             services.AddScoped<IFileService, FileService>();
             services.AddScoped<ICreateProductImportHandler, CreateProductImportHandler>();
+            services.AddTransient<IImportRepository, ImportRepository>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
