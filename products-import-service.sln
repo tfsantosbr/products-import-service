@@ -5,13 +5,20 @@ VisualStudioVersion = 16.6.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{A4464FC5-A807-49A3-A73A-9223097F6869}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductsImport.Consumer", "src\ProductsImport.Consumer\ProductsImport.Consumer.csproj", "{5D8B7EAA-E1EE-4F72-A342-FE6E151CDE5D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProductsImport.Consumer", "src\ProductsImport.Consumer\ProductsImport.Consumer.csproj", "{5D8B7EAA-E1EE-4F72-A342-FE6E151CDE5D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductsImport.Api", "src\ProductsImport.Api\ProductsImport.Api.csproj", "{02E3FA16-D14B-4068-A6C9-280605640E60}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProductsImport.Api", "src\ProductsImport.Api\ProductsImport.Api.csproj", "{02E3FA16-D14B-4068-A6C9-280605640E60}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductsImport.ProductUpdater.Consumer", "src\ProductsImport.ProductUpdater.Consumer\ProductsImport.ProductUpdater.Consumer.csproj", "{BB30C638-27C5-4E1C-99A5-1081B77357F8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProductsImport.ProductUpdater.Consumer", "src\ProductsImport.ProductUpdater.Consumer\ProductsImport.ProductUpdater.Consumer.csproj", "{BB30C638-27C5-4E1C-99A5-1081B77357F8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductsImport.Notification.Consumer", "src\ProductsImport.Notification.Consumer\ProductsImport.Notification.Consumer.csproj", "{09E558D9-8230-44CA-9A53-29B1A9EA6A1B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProductsImport.Notification.Consumer", "src\ProductsImport.Notification.Consumer\ProductsImport.Notification.Consumer.csproj", "{09E558D9-8230-44CA-9A53-29B1A9EA6A1B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{AEEA5822-E5BD-4A3E-A354-49D9CE490E2C}"
+	ProjectSection(SolutionItems) = preProject
+		docker-compose.yaml = docker-compose.yaml
+		data\products-data.sql = data\products-data.sql
+		data\products-import-data.sql = data\products-import-data.sql
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,9 +28,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{5D8B7EAA-E1EE-4F72-A342-FE6E151CDE5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -75,10 +79,16 @@ Global
 		{09E558D9-8230-44CA-9A53-29B1A9EA6A1B}.Release|x86.ActiveCfg = Release|Any CPU
 		{09E558D9-8230-44CA-9A53-29B1A9EA6A1B}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{5D8B7EAA-E1EE-4F72-A342-FE6E151CDE5D} = {A4464FC5-A807-49A3-A73A-9223097F6869}
 		{02E3FA16-D14B-4068-A6C9-280605640E60} = {A4464FC5-A807-49A3-A73A-9223097F6869}
 		{BB30C638-27C5-4E1C-99A5-1081B77357F8} = {A4464FC5-A807-49A3-A73A-9223097F6869}
 		{09E558D9-8230-44CA-9A53-29B1A9EA6A1B} = {A4464FC5-A807-49A3-A73A-9223097F6869}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {495FB4CE-134F-4E0C-A0D3-8AB3B74A9968}
 	EndGlobalSection
 EndGlobal
