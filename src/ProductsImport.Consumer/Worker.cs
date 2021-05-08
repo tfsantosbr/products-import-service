@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Confluent.Kafka;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
@@ -17,13 +18,40 @@ namespace ProductsImport.Consumer
             _logger = logger;
         }
 
-        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+        protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            while (!stoppingToken.IsCancellationRequested)
+            var config = new ConsumerConfig
             {
-                _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
-                await Task.Delay(1000, stoppingToken);
+                GroupId = "products-import-consumer",
+                BootstrapServers = "localhost:9091,localhost:9092,localhost:9093",
+                AutoOffsetReset = AutoOffsetReset.Latest
+            };
+
+            using var consumer = new ConsumerBuilder<Ignore, string>(config).Build();
+            consumer.Subscribe("products-import-created");
+
+            try
+            {
+                while (!stoppingToken.IsCancellationRequested)
+                {
+                    try
+                    {
+                        var result = consumer.Consume(stoppingToken);
+
+                        Console.WriteLine($"Consumed: '{result.Message.Value}'");
+                    }
+                    catch (ConsumeException e)
+                    {
+                        Console.WriteLine($"Error occured: {e.Error.Reason}");
+                    }
+                }
             }
+            catch (OperationCanceledException)
+            {
+                consumer.Close();
+            }
+
+            return Task.CompletedTask;
         }
     }
 }
