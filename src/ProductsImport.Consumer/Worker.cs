@@ -32,6 +32,9 @@ namespace ProductsImport.Consumer
 
             try
             {
+                _logger.LogInformation("Products Import: Consumer started");
+                _logger.LogInformation("Products Import: Waiting for messages...");
+
                 while (!stoppingToken.IsCancellationRequested)
                 {
                     try
@@ -48,6 +51,8 @@ namespace ProductsImport.Consumer
             }
             catch (OperationCanceledException)
             {
+                _logger.LogInformation("Products Import: Consumer terminated");
+                
                 consumer.Close();
             }
 

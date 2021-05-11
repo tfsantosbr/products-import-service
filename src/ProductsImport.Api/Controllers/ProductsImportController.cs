@@ -28,8 +28,7 @@ namespace ProductsImport.Api.Controllers
             await spreadsheetFile.CopyToAsync(memoryStream);
 
             var request = new CreateProductsImport(spreadsheetFile.FileName, memoryStream.ToArray());
-            await memoryStream.DisposeAsync();
-            
+            await memoryStream.DisposeAsync();            
 
             var result = await productImportHandler.Handle(request);
 

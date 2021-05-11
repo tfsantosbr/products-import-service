@@ -9,8 +9,8 @@ namespace ProductsImport.Api.Infrastructure.Services
         public Task<FileServiceResponse> Upload(string fileName, byte[] data)
         {
             var path = Path.Combine("/", fileName);
-            
-            File.Create(path);
+
+            File.WriteAllBytes(path, data);
 
             var result = new FileServiceResponse
             {
