@@ -35,8 +35,7 @@ namespace ProductsImport.Consumer
 
             try
             {
-                _logger.LogInformation("Products Import: Consumer started");
-                _logger.LogInformation("Products Import: Waiting for messages...");
+                _logger.LogInformation("Products Import started. Waiting for messages...");
 
                 while (!stoppingToken.IsCancellationRequested)
                 {

@@ -46,8 +46,14 @@ namespace ProductsImport.Consumer.Domain.Imports.Services
 
                 Console.WriteLine(line);
 
-                // Converte linha pra objeto 
+                // Converte linha pra objeto
+
                 var importProduct = ParseLineToImportProduct(importId, line);
+
+                if (importProduct is null)
+                {
+                    continue;
+                }
 
                 // Grava na tabela de importação
 
@@ -82,6 +88,11 @@ namespace ProductsImport.Consumer.Domain.Imports.Services
         {
             var values = line.Split(';');
 
+            if (!ValuesValidated(values))
+            {
+                return null;
+            }
+
             var importProduct = new ImportProduct(
                 importId: importId,
                 storeId: Convert.ToInt64(values[0]),
@@ -92,6 +103,36 @@ namespace ProductsImport.Consumer.Domain.Imports.Services
                 );
 
             return importProduct;
+        }
+
+        private static bool ValuesValidated(string[] values)
+        {
+            if (string.IsNullOrWhiteSpace(values[0]) || !long.TryParse(values[0], out _))
+            {
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(values[1]) || values[1].Length > 20)
+            {
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(values[3]) || values[3].Length > 500)
+            {
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(values[9]) || !decimal.TryParse(values[9], out _))
+            {
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(values[14]) || !decimal.TryParse(values[14], out _))
+            {
+                return false;
+            }
+
+            return true;
         }
 
         private async Task CreateMessage(ImportProduct importProduct)
