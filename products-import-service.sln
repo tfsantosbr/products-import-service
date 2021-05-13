@@ -15,9 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProductsImport.Notification
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{AEEA5822-E5BD-4A3E-A354-49D9CE490E2C}"
 	ProjectSection(SolutionItems) = preProject
-		docker-compose.yaml = docker-compose.yaml
-		data\products-data.sql = data\products-data.sql
-		data\products-import-data.sql = data\products-import-data.sql
+		data\products-database.sql = data\products-database.sql
+		data\products-import-database.sql = data\products-import-database.sql
 	EndProjectSection
 EndProject
 Global

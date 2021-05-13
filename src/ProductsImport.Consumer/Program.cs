@@ -1,9 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using ProductsImport.Consumer.Domain.Imports.Handlers;
+using ProductsImport.Consumer.Domain.Imports.Repositories;
+using ProductsImport.Consumer.Domain.Imports.Services;
+using ProductsImport.Consumer.Infrastructure.Repositories;
 
 namespace ProductsImport.Consumer
 {
@@ -19,6 +19,10 @@ namespace ProductsImport.Consumer
                 .ConfigureServices((hostContext, services) =>
                 {
                     services.AddHostedService<Worker>();
+
+                    services.AddTransient<IImportCreatedHandler, ImportCreatedHandler>();
+                    services.AddTransient<ISpreadsheetService, SpreadsheetService>();
+                    services.AddTransient<IImportProductRepository, ImportProductRepository>();
                 });
     }
 }

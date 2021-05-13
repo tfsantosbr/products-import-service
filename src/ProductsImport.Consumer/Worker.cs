@@ -1,24 +1,27 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Confluent.Kafka;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using ProductsImport.Consumer.Domain.Imports.Events;
+using ProductsImport.Consumer.Domain.Imports.Handlers;
+using System;
+using System.Text.Json;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace ProductsImport.Consumer
 {
     public class Worker : BackgroundService
     {
         private readonly ILogger<Worker> _logger;
+        private readonly IImportCreatedHandler _importCreatedHandler;
 
-        public Worker(ILogger<Worker> logger)
+        public Worker(ILogger<Worker> logger, IImportCreatedHandler importCreatedHandler)
         {
             _logger = logger;
+            _importCreatedHandler = importCreatedHandler;
         }
 
-        protected override Task ExecuteAsync(CancellationToken stoppingToken)
+        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             var config = new ConsumerConfig
             {
@@ -39,9 +42,10 @@ namespace ProductsImport.Consumer
                 {
                     try
                     {
-                        var result = consumer.Consume(stoppingToken);
+                        var resultJson = consumer.Consume(stoppingToken);
+                        var importCreated = JsonSerializer.Deserialize<ImportCreated>(resultJson.Message.Value);
 
-                        Console.WriteLine($"Consumed: '{result.Message.Value}'");
+                        await _importCreatedHandler.Handle(importCreated);
                     }
                     catch (ConsumeException e)
                     {
@@ -55,8 +59,11 @@ namespace ProductsImport.Consumer
                 
                 consumer.Close();
             }
-
-            return Task.CompletedTask;
+            catch (Exception exception)
+            {
+                _logger.LogError(exception, $"Got exception on start up." +
+                    $"Exception is {exception.Message}. Stopping service.");
+            }
         }
     }
 }

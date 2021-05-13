@@ -19,10 +19,19 @@ namespace ProductsImport.Notification.Consumer
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            while (!stoppingToken.IsCancellationRequested)
+            try
             {
-                _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
-                await Task.Delay(1000, stoppingToken);
+                while (!stoppingToken.IsCancellationRequested)
+                {
+                    await Task.Yield();
+                    _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
+                    await Task.Delay(1000, stoppingToken);
+                    throw new Exception("EROOOOOOOOOOOOOOOOOOOOOO");
+                }
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, "Erro");
             }
         }
     }
