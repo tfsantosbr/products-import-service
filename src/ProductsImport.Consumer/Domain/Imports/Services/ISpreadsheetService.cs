@@ -10,6 +10,6 @@ namespace ProductsImport.Consumer.Domain.Imports.Services
 {
     public interface ISpreadsheetService
     {
-        Task<ProcessSpreadsheetResult> Process(Guid importId, FileStream spreadsheet);
+        Task<ProcessSpreadsheetResult> Process(Guid importId, string spreadsheetPath);
     }
 }

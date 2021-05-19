@@ -23,34 +23,25 @@ namespace ProductsImport.Consumer.Domain.Imports.Handlers
         {
             _logger.LogInformation($"Evento recebido: {notification.Id}, {notification.CreatedAt}, {notification.SpreadsheetFileUrl}");
 
-            // Efetua o download do arquivo da planilha
-
-            var spreadsheet = DownloadSpreadsheet(notification.SpreadsheetFileUrl);
-
-            if (spreadsheet is null)
-            {
-                throw new InvalidOperationException("Planilha não encontrada");
-            }
-
             // Processa a Planilha
 
-            var result = await ProcessSpreadsheet(notification.Id,spreadsheet);
+            var result = await ProcessSpreadsheet(notification.Id, notification.SpreadsheetFileUrl);
         }
 
 
-        private static FileStream DownloadSpreadsheet(string spreadsheetPath)
+        private async Task<byte[]> DownloadSpreadsheet(string spreadsheetPath)
         {
             if (!File.Exists(spreadsheetPath))
             {
                 return null;
             }
 
-            return File.OpenRead(spreadsheetPath);
+            return await File.ReadAllBytesAsync(spreadsheetPath);
         }
 
-        private async Task<ProcessSpreadsheetResult> ProcessSpreadsheet(Guid importId, FileStream spreadsheet)
+        private async Task<ProcessSpreadsheetResult> ProcessSpreadsheet(Guid importId, string spreadsheetPath)
         {
-            return await _spreadsheetService.Process(importId,spreadsheet);
+            return await _spreadsheetService.Process(importId, spreadsheetPath);
         }
     }
 }

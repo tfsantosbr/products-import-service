@@ -27,14 +27,14 @@ namespace ProductsImport.Consumer.Domain.Imports.Services
             _producer = new ProducerBuilder<Null, string>(config).Build();
         }
 
-        public async Task<ProcessSpreadsheetResult> Process(Guid importId, FileStream spreadsheet)
+        public async Task<ProcessSpreadsheetResult> Process(Guid importId, string spreadsheetPath)
         {
             int totalTines = 1;
             int processed = 0;
             int errors = 0;
             var watch = Stopwatch.StartNew();
 
-            using var reader = new StreamReader(spreadsheet);
+            using var reader = new StreamReader(spreadsheetPath);
 
             // pula cabeçalho
 
@@ -43,8 +43,6 @@ namespace ProductsImport.Consumer.Domain.Imports.Services
             while (!reader.EndOfStream)
             {
                 var line = reader.ReadLine();
-
-                Console.WriteLine(line);
 
                 // Converte linha pra objeto
 
@@ -139,6 +137,8 @@ namespace ProductsImport.Consumer.Domain.Imports.Services
         {
             var json = JsonSerializer.Serialize(importProduct);
 
+            Console.WriteLine(json);
+
             var message = new Message<Null, string>
             {
                 Value = json
@@ -150,7 +150,7 @@ namespace ProductsImport.Consumer.Domain.Imports.Services
         private void SendMessages()
         {
             _producer.Flush();
-            _producer.Dispose();
+            //_producer.Dispose();
         }
     }
 }
