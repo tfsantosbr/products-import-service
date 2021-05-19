@@ -1,9 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using ProductsImport.ProductUpdater.Consumer.Domain.Imports.Repositories;
+using ProductsImport.ProductUpdater.Consumer.Domain.Products.Handlers;
+using ProductsImport.ProductUpdater.Consumer.Domain.Products.Repositories;
+using ProductsImport.ProductUpdater.Consumer.Infrastructure.Repositories;
 
 namespace ProductsImport.ProductUpdater.Consumer
 {
@@ -19,6 +19,9 @@ namespace ProductsImport.ProductUpdater.Consumer
                 .ConfigureServices((hostContext, services) =>
                 {
                     services.AddHostedService<Worker>();
+                    services.AddTransient<IProcessProductRequestedHandler, ProcessProductRequestedHandler>();
+                    services.AddTransient<IImportRepository, ImportRepository>();
+                    services.AddTransient<IProductRepository, ProductRepository>();
                 });
     }
 }

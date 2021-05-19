@@ -41,8 +41,8 @@ namespace ProductsImport.Consumer
                 {
                     try
                     {
-                        var resultJson = consumer.Consume(stoppingToken);
-                        var importCreated = JsonSerializer.Deserialize<ImportCreated>(resultJson.Message.Value);
+                        var result = consumer.Consume(stoppingToken);
+                        var importCreated = JsonSerializer.Deserialize<ImportCreated>(result.Message.Value);
 
                         await _importCreatedHandler.Handle(importCreated);
                     }

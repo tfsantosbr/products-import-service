@@ -7,16 +7,20 @@ using System.Threading.Tasks;
 using Confluent.Kafka;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using ProductsImport.ProductUpdater.Consumer.Domain.Products.Events;
+using ProductsImport.ProductUpdater.Consumer.Domain.Products.Handlers;
 
 namespace ProductsImport.ProductUpdater.Consumer
 {
     public class Worker : BackgroundService
     {
         private readonly ILogger<Worker> _logger;
+        private readonly IProcessProductRequestedHandler _processProductRequestedHandler;
 
-        public Worker(ILogger<Worker> logger)
+        public Worker(ILogger<Worker> logger, IProcessProductRequestedHandler processProductRequestedHandler)
         {
             _logger = logger;
+            _processProductRequestedHandler = processProductRequestedHandler;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -40,8 +44,11 @@ namespace ProductsImport.ProductUpdater.Consumer
                     try
                     {
                         var result = consumer.Consume(stoppingToken);
+                        var processProductRequested = JsonSerializer.Deserialize<ProcessProductRequested>(result.Message.Value);
 
-                        _logger.LogInformation($"Message: {result.Message.Value}");
+                        _logger.LogInformation($"Product Requested: {processProductRequested.StoreId} | {processProductRequested.ProductCode}");
+
+                        await _processProductRequestedHandler.Handle(processProductRequested);
                     }
                     catch (ConsumeException e)
                     {
