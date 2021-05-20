@@ -1,19 +1,26 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Confluent.Kafka;
+using Microsoft.Extensions.Logging;
+using ProductsImport.ProductUpdater.Consumer.Domain.Imports.Events;
 using ProductsImport.ProductUpdater.Consumer.Domain.Imports.Repositories;
 using ProductsImport.ProductUpdater.Consumer.Domain.Products.Events;
 using ProductsImport.ProductUpdater.Consumer.Domain.Products.Repositories;
 using System;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace ProductsImport.ProductUpdater.Consumer.Domain.Products.Handlers
 {
     public class ProcessProductRequestedHandler : IProcessProductRequestedHandler
     {
+        // Fields
+
         private readonly IProductRepository _productRepository;
         private readonly IImportRepository _importRepository;
         private readonly ILogger<ProcessProductRequestedHandler> _logger;
 
-        public ProcessProductRequestedHandler(IProductRepository productRepository, IImportRepository importRepository, 
+        // Constructors
+
+        public ProcessProductRequestedHandler(IProductRepository productRepository, IImportRepository importRepository,
             ILogger<ProcessProductRequestedHandler> logger)
         {
             _productRepository = productRepository;
@@ -21,25 +28,33 @@ namespace ProductsImport.ProductUpdater.Consumer.Domain.Products.Handlers
             _logger = logger;
         }
 
+        // Implementations
+
         public async Task Handle(ProcessProductRequested notification)
         {
             var product = await _productRepository.GetProduct(notification.StoreId, notification.ProductCode);
 
-            if (product is not null)
+            if (product is null)
             {
-                product.Update(
-                    name: notification.Name,
-                    price: notification.Price,
-                    stock: notification.Stock
-                    );
-
-                await _productRepository.Update(product);
-
-                _logger.LogInformation($"Product UPDATED: {product.StoreId} | {product.Code} | {product.ProcessedAt}");
+                await CreateProduct(notification);
             }
             else
             {
-                product = new Product(
+                await UpdateProduct(product, notification);
+            }
+
+            // se for o último produto a ser atualizado, notifica finalização da importação
+            if (await IsLastProductImported(notification.ImportId))
+            {
+                await RaiseEventImportCompleted(notification.ImportId);
+            }
+        }
+
+        // Private Methods
+
+        private async Task CreateProduct(ProcessProductRequested notification)
+        {
+            var product = new Product(
                     storeId: notification.StoreId,
                     code: notification.ProductCode,
                     name: notification.Name,
@@ -47,12 +62,73 @@ namespace ProductsImport.ProductUpdater.Consumer.Domain.Products.Handlers
                     stock: notification.Stock
                     );
 
-                await _productRepository.Create(product);
+            var error = ValidateProduct(product);
 
-                _logger.LogInformation($"Product CREATED: {product.StoreId} | {product.Code} | {product.ProcessedAt}");
+            if (string.IsNullOrWhiteSpace(error))
+            {
+                await _productRepository.Create(product);
             }
 
-            // se for o último produto a ser atualizado, notifica finalização da importação
+            _logger.LogInformation($"Product CREATED: {product.StoreId} | {product.Code} | {product.ProcessedAt}");
+
+            await _importRepository.MarkProductAsProcessed(notification.ImportId, notification.ProductCode, error);
+        }
+
+        private async Task UpdateProduct(Product product, ProcessProductRequested notification)
+        {
+            product.Update(
+                name: notification.Name,
+                price: notification.Price,
+                stock: notification.Stock
+                );
+
+            var error = ValidateProduct(product);
+
+            if (string.IsNullOrWhiteSpace(error))
+            {
+                await _productRepository.Update(product);
+
+                _logger.LogInformation($"Product UPDATED: {product.StoreId} | {product.Code} | {product.ProcessedAt}");
+            }
+
+            await _importRepository.MarkProductAsProcessed(notification.ImportId, notification.ProductCode, error);
+        }
+
+        private static string ValidateProduct(Product product)
+        {
+            if (product.Stock < 0)
+            {
+                return "Produto com estoque negativo";
+            }
+
+            return null;
+        }
+
+        private async Task<bool> IsLastProductImported(Guid importId)
+        {
+            return await _importRepository.TotalProductsProcessing(importId) == 0;
+        }
+
+        private static async Task RaiseEventImportCompleted(Guid importId)
+        {
+            var config = new ProducerConfig
+            {
+                BootstrapServers = "localhost:9091,localhost:9092,localhost:9093",
+                EnableDeliveryReports = false
+            };
+
+            var producer = new ProducerBuilder<Null, string>(config).Build();
+
+            var importCompleted = new ImportCompleted(importId);
+
+            var json = JsonSerializer.Serialize(importCompleted);
+
+            var message = new Message<Null, string>
+            {
+                Value = json
+            };
+
+            await producer.ProduceAsync("products-import-completed", message);
         }
     }
 }

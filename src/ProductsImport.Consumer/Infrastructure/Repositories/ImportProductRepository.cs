@@ -27,10 +27,12 @@ namespace ProductsImport.Consumer.Infrastructure.Repositories
             var sql = @"INSERT INTO ""imports-products""
                                    (""import-id""
                                    ,""product-code""
-                                   ,""is-processed"")
+                                   ,""is-processed""
+                                   ,""processed-at"")
                             VALUES (:ImportId
                                    ,:ProductCode
-                                   ,false)";
+                                   ,false
+                                   ,NULL)";
 
             using var connection = new NpgsqlConnection(_connectionString);
 
