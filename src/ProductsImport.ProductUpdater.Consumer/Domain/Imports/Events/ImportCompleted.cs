@@ -11,8 +11,10 @@ namespace ProductsImport.ProductUpdater.Consumer.Domain.Imports.Events
         public ImportCompleted(Guid importId)
         {
             ImportId = importId;
+            CompletedAt = DateTime.UtcNow;
         }
 
         public Guid ImportId { get; private set; }
+        public DateTime CompletedAt { get; private set; }
     }
 }

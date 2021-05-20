@@ -1,9 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using ProductsImport.Notification.Consumer.Domain.Imports.Handlers;
+using ProductsImport.Notification.Consumer.Domain.Imports.Repositories;
+using ProductsImport.Notification.Consumer.Infrastructure.Repositories;
 
 namespace ProductsImport.Notification.Consumer
 {
@@ -19,6 +18,8 @@ namespace ProductsImport.Notification.Consumer
                 .ConfigureServices((hostContext, services) =>
                 {
                     services.AddHostedService<Worker>();
+                    services.AddTransient<IImportCompletedHandler, ImportCompletedHandler>();
+                    services.AddTransient<IImportRepository, ImportRepository>();
                 });
     }
 }

@@ -1,14 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.Json;
-using System.Threading;
-using System.Threading.Tasks;
 using Confluent.Kafka;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using ProductsImport.ProductUpdater.Consumer.Domain.Products.Events;
 using ProductsImport.ProductUpdater.Consumer.Domain.Products.Handlers;
+using System;
+using System.Text.Json;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace ProductsImport.ProductUpdater.Consumer
 {
