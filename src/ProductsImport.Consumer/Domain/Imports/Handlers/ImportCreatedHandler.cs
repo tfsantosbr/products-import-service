@@ -28,17 +28,6 @@ namespace ProductsImport.Consumer.Domain.Imports.Handlers
             var result = await ProcessSpreadsheet(notification.Id, notification.SpreadsheetFileUrl);
         }
 
-
-        private async Task<byte[]> DownloadSpreadsheet(string spreadsheetPath)
-        {
-            if (!File.Exists(spreadsheetPath))
-            {
-                return null;
-            }
-
-            return await File.ReadAllBytesAsync(spreadsheetPath);
-        }
-
         private async Task<ProcessSpreadsheetResult> ProcessSpreadsheet(Guid importId, string spreadsheetPath)
         {
             return await _spreadsheetService.Process(importId, spreadsheetPath);
