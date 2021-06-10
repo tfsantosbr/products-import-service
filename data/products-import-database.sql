@@ -1,16 +1,15 @@
 -- public.imports definition
 
-CREATE TABLE public.imports (
+CREATE TABLE imports (
 	id uuid NOT NULL,
 	"created-at" timestamp(0) NOT NULL,
 	"completed-at" timestamp(0) NULL,
 	"spreadsheet-file-url" varchar(300) NOT NULL,
 	CONSTRAINT imports_pk PRIMARY KEY (id)
 );
-
 -- public."imports-products" definition
 
-CREATE TABLE public."imports-products" (
+CREATE TABLE "imports-products" (
 	"import-id" uuid NOT NULL,
 	"product-code" varchar(20) NOT NULL,
 	"is-processed" bool NOT NULL,
@@ -21,4 +20,4 @@ CREATE TABLE public."imports-products" (
 
 -- public."imports-products" foreign keys
 
-ALTER TABLE public."imports-products" ADD CONSTRAINT imports_products_fk FOREIGN KEY ("import-id") REFERENCES public.imports(id);
+ALTER TABLE public."imports-products" ADD CONSTRAINT imports_products_fk FOREIGN KEY ("import-id") REFERENCES imports(id);
