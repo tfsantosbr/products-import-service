@@ -7,6 +7,7 @@ using ProductsImport.Api.Domain.Imports.Commands;
 using ProductsImport.Api.Domain.Imports.Event;
 using ProductsImport.Api.Domain.Imports.Models;
 using ProductsImport.Api.Domain.Imports.Repository;
+using Shared.Messaging.Kafka.Producer;
 
 namespace ProductsImport.Api.Domain.Imports.Handlers
 {
@@ -14,6 +15,12 @@ namespace ProductsImport.Api.Domain.Imports.Handlers
     {
         private readonly IFileService fileService;
         private readonly IImportRepository importRepository;
+        private readonly IMessageProducer _messageProducer;
+
+        public CreateProductImportHandler(IMessageProducer messageProducer)
+        {
+            _messageProducer = messageProducer;
+        }
 
         public CreateProductImportHandler(IFileService fileService, IImportRepository importRepository)
         {
@@ -66,6 +73,8 @@ namespace ProductsImport.Api.Domain.Imports.Handlers
             {
                 Value = json
             };
+
+            _messageProducer.ProduceAsync();
 
             var result = await producer.ProduceAsync("products-import-created", message);
         }
