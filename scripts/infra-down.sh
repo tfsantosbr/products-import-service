@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 cd /d/Github/infra-kafka-cluster
 docker-compose exec kafka kafka-topics --bootstrap-server kafka:9092 --delete --topic products-import-created

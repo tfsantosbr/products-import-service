@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 cd /d/Github/infra-kafka-cluster
 docker-compose up -d
@@ -7,7 +7,7 @@ cd /d/Github/infra-postgres-database
 docker-compose up -d
 
 cd /d/Github/infra-elastic-stack
-docker-compose up -d
+bash run.sh
 
 cd /d/Github/infra-kafka-cluster
 docker-compose exec kafka kafka-topics --create --replication-factor 1 --partitions 1 --topic products-import-created --bootstrap-server kafka:9092
