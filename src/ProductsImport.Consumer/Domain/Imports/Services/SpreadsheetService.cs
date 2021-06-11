@@ -3,6 +3,7 @@ using ProductsImport.Consumer.Domain.Imports.Models;
 using ProductsImport.Consumer.Domain.Imports.Repositories;
 using System;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -96,8 +97,8 @@ namespace ProductsImport.Consumer.Domain.Imports.Services
                 storeId: Convert.ToInt64(values[0]),
                 productCode: values[1],
                 name: values[3],
-                price: Convert.ToDecimal(values[9]),
-                stock: Convert.ToDecimal(values[14])
+                price: Convert.ToDecimal(values[9], CultureInfo.InvariantCulture),
+                stock: Convert.ToDecimal(values[14], CultureInfo.InvariantCulture)
                 );
 
             return importProduct;
@@ -105,7 +106,7 @@ namespace ProductsImport.Consumer.Domain.Imports.Services
 
         private static bool ValuesValidated(string[] values)
         {
-            if(values == null || values.Length <= 15)
+            if (values == null || values.Length <= 15)
             {
                 return false;
             }

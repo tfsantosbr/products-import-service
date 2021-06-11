@@ -101,6 +101,11 @@ namespace ProductsImport.ProductUpdater.Consumer.Domain.Products.Handlers
                 return "Produto com estoque negativo";
             }
 
+            if (product.Price == 0)
+            {
+                return "Produto com preço igual a 0";
+            }
+
             return null;
         }
 
