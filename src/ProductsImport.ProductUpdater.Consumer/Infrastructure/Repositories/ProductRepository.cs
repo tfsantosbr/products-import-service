@@ -28,7 +28,7 @@ namespace ProductsImport.ProductUpdater.Consumer.Infrastructure.Repositories
 
         public async Task Create(Product product)
         {
-            var sql = @"INSERT INTO products (id, ""store-id"", code, ""name"", price, stock, ""processed-at"") 
+            var sql = @"INSERT INTO ""Products"" (""Id"", ""StoreId"", ""Code"", ""Name"", ""Price"", ""Stock"", ""ProcessedAt"") 
                              VALUES (:Id, :StoreId, :Code, :Name, :Price, :Stock, :ProcessedAt);";
 
             using var connection = new NpgsqlConnection(_connectionString);
@@ -38,16 +38,16 @@ namespace ProductsImport.ProductUpdater.Consumer.Infrastructure.Repositories
 
         public async Task<Product> GetProduct(long storeId, string code)
         {
-            var sql = @"SELECT id as ""Id""
-                             , ""store-id"" as ""StoreId""
-                             , code as ""Code""
-                             , ""name"" as ""Name""
-                             , price as ""Price""
-                             , stock as ""Stock""
-                             , ""processed-at"" as ""ProcessedAt""
-                          FROM products
-                         WHERE ""store-id"" = :StoreId 
-                           AND code = :Code;";
+            var sql = @"SELECT ""Id""
+                              ,""StoreId""
+                              ,""Code""
+                              ,""Name""
+                              ,""Price""
+                              ,""Stock""
+                              ,""ProcessedAt""
+                          FROM ""Products""
+                         WHERE ""StoreId"" = :StoreId 
+                           AND ""Code"" = :Code;";
 
             using var connection = new NpgsqlConnection(_connectionString);
 
@@ -58,14 +58,14 @@ namespace ProductsImport.ProductUpdater.Consumer.Infrastructure.Repositories
 
         public async Task Update(Product product)
         {
-            var sql = @"UPDATE products 
-                           SET ""store-id""=:StoreId
-                             , code=:Code
-                             , ""name""=:Name
-                             , price=:Price
-                             , stock=:Stock
-                             , ""processed-at""=:ProcessedAt
-                         WHERE id=:Id;";
+            var sql = @"UPDATE ""Products""
+                           SET ""StoreId""=:StoreId
+                             , ""Code""=:Code
+                             , ""Name""=:Name
+                             , ""Price""=:Price
+                             , ""Stock""=:Stock
+                             , ""ProcessedAt""=:ProcessedAt
+                         WHERE ""Id""=:Id;";
 
             using var connection = new NpgsqlConnection(_connectionString);
 

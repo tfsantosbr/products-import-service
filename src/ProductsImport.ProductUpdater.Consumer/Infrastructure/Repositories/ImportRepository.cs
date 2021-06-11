@@ -24,9 +24,9 @@ namespace ProductsImport.ProductUpdater.Consumer.Infrastructure.Repositories
 
         public async Task MarkProductAsProcessed(Guid importId, string productCode, string observation = null)
         {
-            var sql = @"UPDATE ""imports-products""
-                           SET ""is-processed""=true, observation=:Observation, ""processed-at""=:ProcessedAt
-                         WHERE ""import-id""=:ImportId AND ""product-code""=:ProductCode;";
+            var sql = @"UPDATE ""ImportProducts""
+                           SET ""IsProcessed""=true, ""Observation""=:Observation, ""ProcessedAt""=:ProcessedAt
+                         WHERE ""ImportId""=:ImportId AND ""ProductCode""=:ProductCode;";
 
             using var connection = new NpgsqlConnection(_connectionString);
 
@@ -41,10 +41,10 @@ namespace ProductsImport.ProductUpdater.Consumer.Infrastructure.Repositories
 
         public async Task<int> TotalProductsProcessing(Guid importId)
         {
-            var sql = @"SELECT count(""import-id"") 
-                          FROM ""imports-products"" 
-                         WHERE ""import-id"" = :ImportId
-                           AND ""is-processed"" = false";
+            var sql = @"SELECT count(""ImportId"") 
+                          FROM ""ImportProducts"" 
+                         WHERE ""ImportId"" = :ImportId
+                           AND ""IsProcessed"" = false";
 
             using var connection = new NpgsqlConnection(_connectionString);
 

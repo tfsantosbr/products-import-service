@@ -27,9 +27,9 @@ namespace ProductsImport.Notification.Consumer.Infrastructure.Repositories
 
         public async Task MarkImportCompleted(Guid importId, DateTime completedAt)
         {
-            var sql = @"UPDATE ""imports""
-                           SET ""completed-at""=:CompletedAt
-                         WHERE id=:Id";
+            var sql = @"UPDATE ""Imports""
+                           SET ""CompletedAt""=:CompletedAt
+                         WHERE ""Id""=:Id";
 
             using var connection = new NpgsqlConnection(_connectionString);
 

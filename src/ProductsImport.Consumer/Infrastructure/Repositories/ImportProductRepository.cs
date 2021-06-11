@@ -24,11 +24,11 @@ namespace ProductsImport.Consumer.Infrastructure.Repositories
 
         public async Task Create(ImportProduct importProduct)
         {
-            var sql = @"INSERT INTO ""imports-products""
-                                   (""import-id""
-                                   ,""product-code""
-                                   ,""is-processed""
-                                   ,""processed-at"")
+            var sql = @"INSERT INTO ""ImportProducts""
+                                   (""ImportId""
+                                   ,""ProductCode""
+                                   ,""IsProcessed""
+                                   ,""ProcessedAt"")
                             VALUES (:ImportId
                                    ,:ProductCode
                                    ,false

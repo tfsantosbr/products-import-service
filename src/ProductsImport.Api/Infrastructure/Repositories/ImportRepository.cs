@@ -26,11 +26,11 @@ namespace ProductsImport.Api.Infrastructure.Repositories
         // Public Methods
         public async Task Create(Import import)
         {
-            var sql = @"INSERT INTO imports 
-                                   (id
-                                   ,""created-at""
-                                   ,""completed-at""
-                                   ,""spreadsheet-file-url"")
+            var sql = @"INSERT INTO ""Imports""
+                                   (""Id""
+                                   ,""CreatedAt""
+                                   ,""CompletedAt""
+                                   ,""SpreadsheetFileUrl"")
                             VALUES(:Id
                                    ,:CreatedAt
                                    ,:CompletedAt
@@ -43,15 +43,15 @@ namespace ProductsImport.Api.Infrastructure.Repositories
 
         public async Task<IEnumerable<ImportItem>> ListImports()
         {
-            var sql = @"SELECT id
-	                          ,""created-at"" as CreatedAt
-	                          ,""completed-at"" as CompletedAt
-	                          ,""spreadsheet-file-url"" as SpreadsheetFileUrl
-	                          ,(select count(*) from ""imports-products"" ip where ip.""import-id"" = id) as TotalItems
-	                          ,(select count(*) from ""imports-products"" ip where ip.""import-id"" = id and ip.""is-processed"" = true) as TotalItemsProcessed
-                        FROM imports
-                    ORDER BY ""created-at"" DESC
-                       LIMIT 15; ";
+            var sql = @"SELECT ""Id""
+	                          ,""CreatedAt""
+	                          ,""CompletedAt""
+	                          ,""SpreadsheetFileUrl""
+	                          ,(select count(*) from ""ImportProducts"" ip where ip.""ImportId"" = ""Id"") as ""TotalItems""
+	                          ,(select count(*) from ""ImportProducts"" ip where ip.""ImportId"" = ""Id"" and ip.""IsProcessed"" = true) as ""TotalItemsProcessed""
+                        FROM ""Imports""
+                    ORDER BY ""CreatedAt"" DESC
+                       LIMIT 15";
 
             using var connection = new NpgsqlConnection(_connectionString);
             var results = await connection.QueryAsync<ImportItem>(sql);
