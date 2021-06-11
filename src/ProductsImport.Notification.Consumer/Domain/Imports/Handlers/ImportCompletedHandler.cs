@@ -1,8 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using ProductsImport.Notification.Consumer.Domain.Imports.Events;
 using ProductsImport.Notification.Consumer.Domain.Imports.Repositories;
-using ProductsImport.Notification.Consumer.Infrastructure.Repositories;
-using System;
 using System.Threading.Tasks;
 
 namespace ProductsImport.Notification.Consumer.Domain.Imports.Handlers

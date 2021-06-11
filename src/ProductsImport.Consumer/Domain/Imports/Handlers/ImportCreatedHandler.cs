@@ -25,7 +25,7 @@ namespace ProductsImport.Consumer.Domain.Imports.Handlers
 
             // Processa a Planilha
 
-            var result = await ProcessSpreadsheet(notification.Id, notification.SpreadsheetFileUrl);
+            await ProcessSpreadsheet(notification.Id, notification.SpreadsheetFileUrl);
         }
 
         private async Task<ProcessSpreadsheetResult> ProcessSpreadsheet(Guid importId, string spreadsheetPath)

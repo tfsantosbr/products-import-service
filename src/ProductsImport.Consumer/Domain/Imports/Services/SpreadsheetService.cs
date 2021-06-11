@@ -1,4 +1,5 @@
 ﻿using Confluent.Kafka;
+using Microsoft.Extensions.Configuration;
 using ProductsImport.Consumer.Domain.Imports.Models;
 using ProductsImport.Consumer.Domain.Imports.Repositories;
 using System;
@@ -14,14 +15,16 @@ namespace ProductsImport.Consumer.Domain.Imports.Services
     {
         private readonly IImportProductRepository _importProductRepository;
         private readonly IProducer<Null, string> _producer;
+        private readonly IConfiguration _configuration;
 
-        public SpreadsheetService(IImportProductRepository importProductRepository)
+        public SpreadsheetService(IImportProductRepository importProductRepository, IConfiguration configuration)
         {
             _importProductRepository = importProductRepository;
+            _configuration = configuration;
 
             var config = new ProducerConfig
             {
-                BootstrapServers = "localhost:9091,localhost:9092,localhost:9093",
+                BootstrapServers = _configuration["Kafka:BootstrapServers"],
                 EnableDeliveryReports = false
             };
 
@@ -156,7 +159,6 @@ namespace ProductsImport.Consumer.Domain.Imports.Services
         private void SendMessages()
         {
             _producer.Flush();
-            //_producer.Dispose();
         }
     }
 }

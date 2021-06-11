@@ -1,4 +1,5 @@
 using Confluent.Kafka;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using ProductsImport.ProductUpdater.Consumer.Domain.Products.Events;
@@ -14,19 +15,21 @@ namespace ProductsImport.ProductUpdater.Consumer
     {
         private readonly ILogger<Worker> _logger;
         private readonly IProcessProductRequestedHandler _processProductRequestedHandler;
+        private readonly IConfiguration _configuration;
 
-        public Worker(ILogger<Worker> logger, IProcessProductRequestedHandler processProductRequestedHandler)
+        public Worker(ILogger<Worker> logger, IProcessProductRequestedHandler processProductRequestedHandler, IConfiguration configuration)
         {
             _logger = logger;
             _processProductRequestedHandler = processProductRequestedHandler;
+            _configuration = configuration;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             var config = new ConsumerConfig
             {
-                GroupId = "products-import-consumer",
-                BootstrapServers = "localhost:9091,localhost:9092,localhost:9093",
+                GroupId = _configuration["Kafka:GroupId"],
+                BootstrapServers = _configuration["Kafka:BootstrapServers"],
                 AutoOffsetReset = AutoOffsetReset.Latest
             };
 

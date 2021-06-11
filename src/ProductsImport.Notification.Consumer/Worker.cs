@@ -1,14 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.Json;
-using System.Threading;
-using System.Threading.Tasks;
 using Confluent.Kafka;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using ProductsImport.Notification.Consumer.Domain.Imports.Events;
 using ProductsImport.Notification.Consumer.Domain.Imports.Handlers;
+using System;
+using System.Text.Json;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace ProductsImport.Notification.Consumer
 {
@@ -16,19 +15,21 @@ namespace ProductsImport.Notification.Consumer
     {
         private readonly ILogger<Worker> _logger;
         private readonly IImportCompletedHandler _importCompletedHandler;
+        private readonly IConfiguration _configuration;
 
-        public Worker(ILogger<Worker> logger, IImportCompletedHandler importCompletedHandler)
+        public Worker(ILogger<Worker> logger, IImportCompletedHandler importCompletedHandler, IConfiguration configuration)
         {
             _logger = logger;
             _importCompletedHandler = importCompletedHandler;
+            _configuration = configuration;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             var config = new ConsumerConfig
             {
-                GroupId = "products-import-consumer",
-                BootstrapServers = "localhost:9091,localhost:9092,localhost:9093",
+                GroupId = _configuration["Kafka:GroupId"],
+                BootstrapServers = _configuration["Kafka:BootstrapServers"],
                 AutoOffsetReset = AutoOffsetReset.Latest
             };
 

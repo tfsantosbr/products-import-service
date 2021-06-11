@@ -1,4 +1,5 @@
 ﻿using Confluent.Kafka;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using ProductsImport.ProductUpdater.Consumer.Domain.Imports.Events;
 using ProductsImport.ProductUpdater.Consumer.Domain.Imports.Repositories;
@@ -17,15 +18,17 @@ namespace ProductsImport.ProductUpdater.Consumer.Domain.Products.Handlers
         private readonly IProductRepository _productRepository;
         private readonly IImportRepository _importRepository;
         private readonly ILogger<ProcessProductRequestedHandler> _logger;
+        private readonly IConfiguration _configuration;
 
         // Constructors
 
         public ProcessProductRequestedHandler(IProductRepository productRepository, IImportRepository importRepository,
-            ILogger<ProcessProductRequestedHandler> logger)
+            ILogger<ProcessProductRequestedHandler> logger, IConfiguration configuration)
         {
             _productRepository = productRepository;
             _importRepository = importRepository;
             _logger = logger;
+            _configuration = configuration;
         }
 
         // Implementations
@@ -114,11 +117,11 @@ namespace ProductsImport.ProductUpdater.Consumer.Domain.Products.Handlers
             return await _importRepository.TotalProductsProcessing(importId) == 0;
         }
 
-        private static async Task RaiseEventImportCompleted(Guid importId)
+        private async Task RaiseEventImportCompleted(Guid importId)
         {
             var config = new ProducerConfig
             {
-                BootstrapServers = "localhost:9091,localhost:9092,localhost:9093",
+                BootstrapServers = _configuration["Kafka:BootstrapServers"],
                 EnableDeliveryReports = false
             };
 
