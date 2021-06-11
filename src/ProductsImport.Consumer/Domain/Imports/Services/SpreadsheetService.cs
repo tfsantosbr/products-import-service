@@ -105,27 +105,32 @@ namespace ProductsImport.Consumer.Domain.Imports.Services
 
         private static bool ValuesValidated(string[] values)
         {
-            if (string.IsNullOrWhiteSpace(values[0]) || !long.TryParse(values[0], out _))
+            if(values == null || values.Length <= 15)
             {
                 return false;
             }
 
-            if (string.IsNullOrWhiteSpace(values[1]) || values[1].Length > 20)
+            if (values[0] != null && string.IsNullOrWhiteSpace(values[0]) || !long.TryParse(values[0], out _))
             {
                 return false;
             }
 
-            if (string.IsNullOrWhiteSpace(values[3]) || values[3].Length > 500)
+            if (values[1] != null && string.IsNullOrWhiteSpace(values[1]) || values[1].Length > 20)
             {
                 return false;
             }
 
-            if (string.IsNullOrWhiteSpace(values[9]) || !decimal.TryParse(values[9], out _))
+            if (values[3] != null && string.IsNullOrWhiteSpace(values[3]) || values[3].Length > 500)
             {
                 return false;
             }
 
-            if (string.IsNullOrWhiteSpace(values[14]) || !decimal.TryParse(values[14], out _))
+            if (values[9] != null && string.IsNullOrWhiteSpace(values[9]) || !decimal.TryParse(values[9], out _))
+            {
+                return false;
+            }
+
+            if (values[14] != null && string.IsNullOrWhiteSpace(values[14]) || !decimal.TryParse(values[14], out _))
             {
                 return false;
             }

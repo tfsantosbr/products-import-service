@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Confluent.Kafka;
@@ -25,7 +26,10 @@ namespace ProductsImport.Api.Domain.Imports.Handlers
         {
             // salva planilha no storage
 
-            var result = await fileService.Upload(request.FileName, request.Data);
+            var fileId = Guid.NewGuid();
+            var fileExtension = Path.GetExtension(request.FileName);
+            var fileNewName = $"{fileId}{fileExtension}";
+            var result = await fileService.Upload(fileNewName, request.Data);
 
             // registra importação no banco de dados
 
