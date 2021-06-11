@@ -2,20 +2,23 @@
 using Microsoft.AspNetCore.Mvc;
 using ProductsImport.Api.Domain.Imports.Commands;
 using ProductsImport.Api.Domain.Imports.Handlers;
+using ProductsImport.Api.Domain.Imports.Repository;
 using System.IO;
 using System.Threading.Tasks;
 
 namespace ProductsImport.Api.Controllers
 {
     [ApiController]
-    [Route("products/import")]
+    [Route("products/imports")]
     public class ProductsImportController : ControllerBase
     {
-        private readonly ICreateProductImportHandler productImportHandler;
+        private readonly ICreateProductImportHandler _productImportHandler;
+        private readonly IImportRepository _importRepository;
 
-        public ProductsImportController(ICreateProductImportHandler productImportHandler)
+        public ProductsImportController(ICreateProductImportHandler productImportHandler, IImportRepository importRepository)
         {
-            this.productImportHandler = productImportHandler;
+            _productImportHandler = productImportHandler;
+            _importRepository = importRepository;
         }
 
         [HttpPost]
@@ -30,9 +33,15 @@ namespace ProductsImport.Api.Controllers
             var request = new CreateProductsImport(spreadsheetFile.FileName, memoryStream.ToArray());
             await memoryStream.DisposeAsync();            
 
-            var result = await productImportHandler.Handle(request);
+            var result = await _productImportHandler.Handle(request);
 
             return Ok(result);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ListImports()
+        {
+            return Ok(await _importRepository.ListImports());
         }
     }
 }
