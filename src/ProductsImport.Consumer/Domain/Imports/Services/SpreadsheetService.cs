@@ -71,7 +71,7 @@ namespace ProductsImport.Consumer.Domain.Imports.Services
 
             // Envia mensagens para o tópico
 
-            SendMessages();
+            RaiseEvents();
 
             watch.Stop();
             var elapsedMs = watch.Elapsed;
@@ -158,7 +158,7 @@ namespace ProductsImport.Consumer.Domain.Imports.Services
             await _producer.ProduceAsync("process-product-requested", message);
         }
 
-        private void SendMessages()
+        private void RaiseEvents()
         {
             _producer.Flush();
         }
