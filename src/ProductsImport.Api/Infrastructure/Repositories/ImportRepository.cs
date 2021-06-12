@@ -41,6 +41,23 @@ namespace ProductsImport.Api.Infrastructure.Repositories
             await connection.ExecuteAsync(sql, import);
         }
 
+        public async Task<ImportDetails> GetImportDetails(Guid importId)
+        {
+            var sql = @"SELECT ""Id""
+	                          ,""CreatedAt""
+	                          ,""CompletedAt""
+	                          ,""SpreadsheetFileUrl""
+	                          ,(select count(*) from ""ImportProducts"" ip where ip.""ImportId"" = ""Id"") as ""TotalItems""
+	                          ,(select count(*) from ""ImportProducts"" ip where ip.""ImportId"" = ""Id"" and ip.""IsProcessed"" = true) as ""TotalItemsProcessed""
+                          FROM ""Imports""
+                         WHERE ""Id"" = :Id";
+
+            using var connection = new NpgsqlConnection(_connectionString);
+            var results = await connection.QueryFirstOrDefaultAsync<ImportDetails>(sql, new { Id = importId });
+
+            return results;
+        }
+
         public async Task<IEnumerable<ImportItem>> ListImports()
         {
             var sql = @"SELECT ""Id""

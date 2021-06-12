@@ -19,14 +19,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "data", "data", "{19DA50BA-2
 	ProjectSection(SolutionItems) = preProject
 		data\clear-imports.sql = data\clear-imports.sql
 		data\clear-products.sql = data\clear-products.sql
-		items\data\products-database.sql = items\data\products-database.sql
-		items\data\products-import-database.sql = items\data\products-import-database.sql
+		data\products-database.sql = data\products-database.sql
+		data\products-import-database.sql = data\products-import-database.sql
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{BD900C65-204D-464A-B533-3EC96587635D}"
 	ProjectSection(SolutionItems) = preProject
-		items\scripts\drop-infra.sh = items\scripts\drop-infra.sh
-		items\scripts\provide-infra.sh = items\scripts\provide-infra.sh
+		scripts\infra-down.sh = scripts\infra-down.sh
+		scripts\infra-up.sh = scripts\infra-up.sh
 	EndProjectSection
 EndProject
 Global

@@ -10,5 +10,6 @@ namespace ProductsImport.Api.Domain.Imports.Repository
     {
         Task Create(Import import);
         Task<IEnumerable<ImportItem>> ListImports();
+        Task<ImportDetails> GetImportDetails(Guid importId);
     }
 }
