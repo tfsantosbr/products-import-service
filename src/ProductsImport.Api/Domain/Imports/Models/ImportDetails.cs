@@ -12,6 +12,7 @@ namespace ProductsImport.Api.Domain.Imports.Models
         public DateTime? CompletedAt { get; set; }
         public int TotalItems { get; set; }
         public int TotalItemsProcessed { get; set; }
+        public int TotalErrors { get; set; }
 
         public decimal PercentageProcessed =>
             TotalItems == 0 ? 0 : Math.Round((decimal)((TotalItemsProcessed * 100) / TotalItems), 2);

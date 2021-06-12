@@ -10,13 +10,13 @@ using System.Threading.Tasks;
 namespace ProductsImport.Api.Controllers
 {
     [ApiController]
-    [Route("products/imports")]
-    public class ProductsImportController : ControllerBase
+    [Route("imports")]
+    public class ImportController : ControllerBase
     {
         private readonly ICreateProductImportHandler _productImportHandler;
         private readonly IImportRepository _importRepository;
 
-        public ProductsImportController(ICreateProductImportHandler productImportHandler, IImportRepository importRepository)
+        public ImportController(ICreateProductImportHandler productImportHandler, IImportRepository importRepository)
         {
             _productImportHandler = productImportHandler;
             _importRepository = importRepository;

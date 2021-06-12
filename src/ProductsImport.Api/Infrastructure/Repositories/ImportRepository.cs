@@ -49,11 +49,24 @@ namespace ProductsImport.Api.Infrastructure.Repositories
 	                          ,""SpreadsheetFileUrl""
 	                          ,(select count(*) from ""ImportProducts"" ip where ip.""ImportId"" = ""Id"") as ""TotalItems""
 	                          ,(select count(*) from ""ImportProducts"" ip where ip.""ImportId"" = ""Id"" and ip.""IsProcessed"" = true) as ""TotalItemsProcessed""
+	                          ,(select count(*) from ""ImportProducts"" ip where ip.""ImportId"" = ""Id"" and ip.""IsProcessed"" = true AND ""Observation"" NOTNULL) as ""TotalErrors""
                           FROM ""Imports""
                          WHERE ""Id"" = :Id";
 
             using var connection = new NpgsqlConnection(_connectionString);
             var results = await connection.QueryFirstOrDefaultAsync<ImportDetails>(sql, new { Id = importId });
+
+            return results;
+        }
+
+        public async Task<IEnumerable<ImportProductItem>> ListImportErrors(Guid importId)
+        {
+            var sql = @"SELECT ""ImportId"", ""ProductCode"", ""IsProcessed"", ""Observation"", ""ProcessedAt"" 
+                          FROM ""ImportProducts""
+                         WHERE  ""Observation"" NOTNULL AND ""ImportId"" = :ImportId";
+
+            using var connection = new NpgsqlConnection(_connectionString);
+            var results = await connection.QueryAsync<ImportProductItem>(sql, new { ImportId = importId });
 
             return results;
         }

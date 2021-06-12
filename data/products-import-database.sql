@@ -8,7 +8,7 @@ CREATE TABLE "Imports" (
 	CONSTRAINT imports_pk PRIMARY KEY ("Id")
 );
 
--- public."imports-products" definition
+-- public."ImportProducts" definition
 
 CREATE TABLE "ImportProducts" (
 	"ImportId" uuid NOT NULL,
@@ -16,9 +16,10 @@ CREATE TABLE "ImportProducts" (
 	"IsProcessed" bool NOT NULL,
 	"Observation" varchar(500) NULL,
 	"ProcessedAt" information_schema."time_stamp" NULL,
+	"Line" numeric NOT NULL,
 	CONSTRAINT imports_products_pk PRIMARY KEY ("ImportId", "ProductCode")
 );
 
--- public."imports-products" foreign keys
+-- public."ImportProducts" foreign keys
 
 ALTER TABLE public."ImportProducts" ADD CONSTRAINT imports_products_fk FOREIGN KEY ("ImportId") REFERENCES "Imports"("Id");
