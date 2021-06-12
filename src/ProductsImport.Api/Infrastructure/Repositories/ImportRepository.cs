@@ -61,7 +61,7 @@ namespace ProductsImport.Api.Infrastructure.Repositories
 
         public async Task<IEnumerable<ImportProductItem>> ListImportErrors(Guid importId)
         {
-            var sql = @"SELECT ""ImportId"", ""ProductCode"", ""IsProcessed"", ""Observation"", ""ProcessedAt"" 
+            var sql = @"SELECT ""ImportId"", ""ProductCode"", ""IsProcessed"", ""Observation"", ""ProcessedAt"", ""Line""
                           FROM ""ImportProducts""
                          WHERE  ""Observation"" NOTNULL AND ""ImportId"" = :ImportId";
 

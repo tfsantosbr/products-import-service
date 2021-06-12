@@ -12,5 +12,6 @@ namespace ProductsImport.Api.Domain.Imports.Models
         public bool IsProcessed { get; set; }
         public string Observation { get; set; }
         public DateTime? ProcessedAt { get; set; }
+        public int Line { get; set; }
     }
 }

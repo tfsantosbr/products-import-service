@@ -33,7 +33,7 @@ namespace ProductsImport.Consumer.Domain.Imports.Services
 
         public async Task<ProcessSpreadsheetResult> Process(Guid importId, string spreadsheetPath)
         {
-            int totalTines = 1;
+            int lineNumber = 2;
             int processed = 0;
             int errors = 0;
             var watch = Stopwatch.StartNew();
@@ -50,10 +50,11 @@ namespace ProductsImport.Consumer.Domain.Imports.Services
 
                 // Converte linha pra objeto
 
-                var importProduct = ParseLineToImportProduct(importId, line);
+                var importProduct = ParseLineToImportProduct(importId, line, lineNumber);
 
                 if (importProduct is null)
                 {
+                    lineNumber++;
                     continue;
                 }
 
@@ -65,7 +66,7 @@ namespace ProductsImport.Consumer.Domain.Imports.Services
 
                 await CreateMessage(importProduct);
 
-                totalTines++;
+                lineNumber++;
             }
 
             // Envia mensagens para o tópico
@@ -77,7 +78,7 @@ namespace ProductsImport.Consumer.Domain.Imports.Services
 
             var result = new ProcessSpreadsheetResult
             {
-                TotalLines = totalTines,
+                TotalLines = lineNumber,
                 Processed = processed,
                 Errors = errors,
                 ProcessTime = elapsedMs.ToString()
@@ -86,7 +87,7 @@ namespace ProductsImport.Consumer.Domain.Imports.Services
             return result;
         }
 
-        private static ImportProduct ParseLineToImportProduct(Guid importId, string line)
+        private static ImportProduct ParseLineToImportProduct(Guid importId, string line, int lineNumber)
         {
             var values = line.Split(';');
 
@@ -101,7 +102,8 @@ namespace ProductsImport.Consumer.Domain.Imports.Services
                 productCode: values[1],
                 name: values[3],
                 price: Convert.ToDecimal(values[9], CultureInfo.InvariantCulture),
-                stock: Convert.ToDecimal(values[14], CultureInfo.InvariantCulture)
+                stock: Convert.ToDecimal(values[14], CultureInfo.InvariantCulture),
+                line: lineNumber
                 );
 
             return importProduct;

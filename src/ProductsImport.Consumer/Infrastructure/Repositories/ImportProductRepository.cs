@@ -28,11 +28,13 @@ namespace ProductsImport.Consumer.Infrastructure.Repositories
                                    (""ImportId""
                                    ,""ProductCode""
                                    ,""IsProcessed""
-                                   ,""ProcessedAt"")
+                                   ,""ProcessedAt""
+                                   ,""Line"")
                             VALUES (:ImportId
                                    ,:ProductCode
                                    ,false
-                                   ,NULL)";
+                                   ,NULL
+                                   ,:Line)";
 
             using var connection = new NpgsqlConnection(_connectionString);
 
